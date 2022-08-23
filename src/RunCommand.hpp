@@ -15,9 +15,11 @@ struct FtOptions
   bool no_html_output = false;
   bool no_space_translation = false;
 
-  static void setupRunFtOptions(CLI::App* app, std::shared_ptr<RunOptions> opt);
+  void setupRunFtOptions(CLI::App* app);
 
   void debug_print() const;
+
+  static constexpr auto group_name = "Forward Translator Options";
 };
 
 struct RunOptions
@@ -26,6 +28,8 @@ struct RunOptions
   static void setupRunOptions(CLI::App* parentApp);
 
   static void execute(RunOptions const& opt);
+
+  void debug_print() const;
 
   bool debug = false;
   bool no_simulation = false;

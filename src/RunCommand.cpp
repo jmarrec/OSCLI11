@@ -42,78 +42,76 @@ void RunOptions::setupRunOptions(CLI::App* parentApp) {
   app->add_flag("--debug", opt->debug, "Includes additional outputs for debugging failing workflows and does not clean up the run directory");
 
   // FT options
-  FtOptions::setupRunFtOptions(app, opt);
+  opt->ft_options.setupRunFtOptions(app);
 
   app->callback([opt] { RunOptions::execute(*opt); });
 }
 
-void FtOptions::setupRunFtOptions(CLI::App* app, std::shared_ptr<RunOptions> opt) {
-  app
-    ->add_flag("--runcontrolspecialdays,!--no-runcontrolspecialdays", opt->ft_options.runcontrolspecialdays,
-               "Include RunControlSpecialDays (Holidays)")
-    ->group("Forward Translator Options");
+void FtOptions::setupRunFtOptions(CLI::App* app) {
+  app->add_flag("--runcontrolspecialdays,!--no-runcontrolspecialdays", this->runcontrolspecialdays, "Include RunControlSpecialDays (Holidays)")
+    ->group(FtOptions::group_name);
 
-  app->add_flag("--set-ip-tabular-output", opt->ft_options.ip_tabular_output, "Request IP units from E+ Tabular (HTML) Report [Default: False]")
-    ->group("Forward Translator Options");
+  app->add_flag("--set-ip-tabular-output", this->ip_tabular_output, "Request IP units from E+ Tabular (HTML) Report [Default: False]")
+    ->group(FtOptions::group_name);
 
   app
     ->add_flag(
       "--lifecyclecosts,!--no-lifecyclecosts",
-      [opt](std::int64_t val) {
+      [this](std::int64_t val) {
         fmt::print("val={}\n", val);
-        opt->ft_options.no_lifecyclecosts = (val != 1);
+        this->no_lifecyclecosts = (val != 1);
       },
       "Include LifeCycleCosts [Default: True]")
-    ->group("Forward Translator Options");
+    ->group(FtOptions::group_name);
 
   app
     ->add_flag(
       "--sqlite-output,!--no-sqlite-output",
-      [opt](std::int64_t val) {
+      [this](std::int64_t val) {
         fmt::print("val={}\n", val);
-        opt->ft_options.no_sqlite_output = (val != 1);
+        this->no_sqlite_output = (val != 1);
       },
       "Request Output:SQLite from E+ [Default: True]")
-    ->group("Forward Translator Options")
-    ->default_val(false);
+    ->group(FtOptions::group_name);
 
   app
     ->add_flag(
       "--html-output,!--no-html-output",
-      [opt](std::int64_t val) {
+      [this](std::int64_t val) {
         fmt::print("val={}\n", val);
-        opt->ft_options.no_html_output = (val != 1);
+        this->no_html_output = (val != 1);
       },
       "Request Output:Table:SummaryReports from E+ [Default: True]")
-    ->group("Forward Translator Options")
-    ->default_val(false);
+    ->group(FtOptions::group_name);
 
   app
     ->add_flag(
       "--space-translation,!--no-space-translation",
-      [opt](std::int64_t val) {
+      [this](std::int64_t val) {
         fmt::print("val={}\n", val);
-        opt->ft_options.no_space_translation = (val != 1);
+        this->no_space_translation = (val != 1);
       },
       "Add individual E+ Space [Default: True]")
-    ->group("Forward Translator Options")
-    ->default_val(false);
+    ->group(FtOptions::group_name);
 }
 
 void RunOptions::execute(RunOptions const& opt) {
+  opt.debug_print();
+}
+void RunOptions::debug_print() const {
   fmt::print("\nRunOptions:\n");
-  fmt::print("osw_path={}\n", opt.osw_path.string());
-  fmt::print("debug={}\n", opt.debug);
-  fmt::print("no_simulation={}\n", opt.no_simulation);
-  fmt::print("post_process={}\n", opt.post_process);
-  fmt::print("ep_json={}\n", opt.ep_json);
-  fmt::print("show_stdout={}\n", opt.show_stdout);
-  fmt::print("add_timings={}\n", opt.add_timings);
-  fmt::print("style_stdout={}\n", opt.style_stdout);
+  fmt::print("osw_path={}\n", this->osw_path.string());
+  fmt::print("debug={}\n", this->debug);
+  fmt::print("no_simulation={}\n", this->no_simulation);
+  fmt::print("post_process={}\n", this->post_process);
+  fmt::print("ep_json={}\n", this->ep_json);
+  fmt::print("show_stdout={}\n", this->show_stdout);
+  fmt::print("add_timings={}\n", this->add_timings);
+  fmt::print("style_stdout={}\n", this->style_stdout);
 
-  fmt::print("socket_port={}\n", opt.socket_port);
+  fmt::print("socket_port={}\n", this->socket_port);
 
-  opt.ft_options.debug_print();
+  this->ft_options.debug_print();
 
   fmt::print("\n\n");
 }
