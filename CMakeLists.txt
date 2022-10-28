@@ -173,7 +173,7 @@ message(STATUS "Conan: conan_cmake_configure")
 # This will create the conanfile.txt
 conan_cmake_configure(
   REQUIRES
-  "fmt/8.1.1#b3e969f8561a85087bd0365c09bbf4fb"
+  "fmt/9.1.0#ac21198665db3e7f9a119006e227aaee"
   "gtest/1.11.0#8aca975046f1b60c660ee9d066764d69"
   "cli11/2.2.0#33cd38722fa134b15ae308dfb4e6c942"
   GENERATORS ${CONAN_GENERATOR}

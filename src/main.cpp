@@ -3,6 +3,11 @@
 
 #include <CLI/CLI.hpp>
 #include <fmt/format.h>
+#include <fmt/std.h>     // Formatting std::filesystem::path
+#include <fmt/ranges.h>  // Formatting std::vector
+
+#include <filesystem>
+namespace fs = std::filesystem;
 
 int main(int argc, char* argv[]) {
   CLI::App app{"openstudio CLI"};
@@ -29,10 +34,23 @@ int main(int argc, char* argv[]) {
   std::string gemFile;
   app.add_option("--bundle", gemFile, "Use bundler for GEMFILE'")->option_text("GEMFILE");
 
-  auto* const experimentalApp = app.add_subcommand("experimental");
+  auto* const experimentalApp = app.add_subcommand("labs");
   [[maybe_unused]] auto* energyplus_versionCommand =
     experimentalApp->add_subcommand("energyplus_version", "Returns the EnergyPlus version used by the CLI");
-  [[maybe_unused]] auto* execute_ruby_scriptCommand = experimentalApp->add_subcommand("execute_ruby_script", "Executes a ruby file");
+  {
+    auto* execute_ruby_scriptCommand = experimentalApp->add_subcommand("execute_ruby_script", "Executes a ruby file");
+    fs::path rubyScriptPath;
+    execute_ruby_scriptCommand->add_option("path", rubyScriptPath, "Path to ruby file")->required(true);
+    std::vector<std::string> executeRubyScriptCommandArgs;
+    execute_ruby_scriptCommand->add_option("arguments", executeRubyScriptCommandArgs, "Arguments to pass to the ruby file")
+      ->required(false)
+      ->option_text("args");
+    execute_ruby_scriptCommand->callback([&] {
+      fmt::print("rubyScriptPath={}\n", rubyScriptPath);
+      fmt::print("executeRubyScriptCommandArgs=[{}]\n", executeRubyScriptCommandArgs);
+    });
+  }
+
   [[maybe_unused]] auto* gem_listCommand = experimentalApp->add_subcommand("gem_list", "Lists the set gems available to openstudio");
   [[maybe_unused]] auto* list_commandsCommand = experimentalApp->add_subcommand("list_commands", "Lists the entire set of available commands");
   [[maybe_unused]] auto* measureCommand = experimentalApp->add_subcommand("measure", "Updates measures and compute arguments");
