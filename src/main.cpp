@@ -41,17 +41,11 @@ int main(int argc, char* argv[]) {
     auto* execute_ruby_scriptCommand = experimentalApp->add_subcommand("execute_ruby_script", "Executes a ruby file");
     fs::path rubyScriptPath;
     execute_ruby_scriptCommand->add_option("path", rubyScriptPath, "Path to ruby file")->required(true)->check(CLI::ExistingFile);
-    std::vector<std::string> executeRubyScriptCommandArgs;
     execute_ruby_scriptCommand->allow_extras(true);
-    // execute_ruby_scriptCommand->add_option("arguments", executeRubyScriptCommandArgs, "Arguments to pass to the ruby file")
-    //   ->required(false)
-    //   ->option_text("args");
+    execute_ruby_scriptCommand->footer("Any additional arguments passed after the ruby file are forwarded");
     execute_ruby_scriptCommand->callback([&] {
       fmt::print("rubyScriptPath={}\n", rubyScriptPath);
-      fmt::print("executeRubyScriptCommandArgs=[{}]\n", executeRubyScriptCommandArgs);
-      for (const auto& arg : execute_ruby_scriptCommand->remaining()) {
-        fmt::print("Remaining arg: {}\n", arg);
-      }
+      fmt::print("remaining()={}\n", execute_ruby_scriptCommand->remaining());
     });
   }
 
