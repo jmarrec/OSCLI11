@@ -11,6 +11,7 @@ namespace fs = std::filesystem;
 
 int main(int argc, char* argv[]) {
   CLI::App app{"openstudio CLI"};
+  app.allow_extras(true);
   app.require_subcommand(1);
 
   bool verbose = false;
@@ -61,7 +62,24 @@ int main(int argc, char* argv[]) {
 
   [[maybe_unused]] auto* updateCommand = experimentalApp->add_subcommand("update", "Updates OpenStudio Models to the current version");
 
-  CLI11_PARSE(app, argc, argv);
+  //std::filesystem::path scriptPath;
+  //experimentalApp->add_option("path", scriptPath, "Path to ruby/python script")->expected(-1)->check(CLI::ExistingFile);
+  //experimentalApp->allow_extras(true);
+  //experimentalApp->positionals_at_end();
+  app.callback([&app, &experimentalApp]() {
+    fmt::print("app.remaining()={}\n", app.remaining());
+    fmt::print("experimentalApp->remaining()={}\n", experimentalApp->remaining());
+
+    fmt::print("app.remaining_for_passthrough()={}\n", app.remaining_for_passthrough());
+    fmt::print("experimentalApp->remaining_for_passthrough()={}\n", experimentalApp->remaining_for_passthrough());
+  });
+
+  // CLI11_PARSE(app, argc, argv);
+  try {
+    app.parse(argc, argv);
+  } catch (const CLI::ParseError& e) {
+    return app.exit(e);
+  }
 
   fmt::print("verbose={}\n", verbose);
   fmt::print("includeDirs={}\n", fmt::join(includeDirs, ","));

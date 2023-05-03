@@ -173,9 +173,10 @@ message(STATUS "Conan: conan_cmake_configure")
 # This will create the conanfile.txt
 conan_cmake_configure(
   REQUIRES
-  "fmt/9.1.0#ac21198665db3e7f9a119006e227aaee"
+  "fmt/9.1.0#811e918ca4b4e0b9ddd6d5a2883efa82"
   "gtest/1.11.0#8aca975046f1b60c660ee9d066764d69"
-  "cli11/2.2.0#33cd38722fa134b15ae308dfb4e6c942"
+  #"cli11/2.2.0#33cd38722fa134b15ae308dfb4e6c942"
+  "cli11/2.3.2#8ccdf14fb1ad53532d498c16ae580b4b"
   GENERATORS ${CONAN_GENERATOR}
 )
 
@@ -253,6 +254,16 @@ target_link_libraries(os-cli11
   CLI11::CLI11
 )
 
+add_executable(mcve
+  src/mcve.cpp
+  src/Filesystem.hpp
+)
+target_link_libraries(mcve
+  PRIVATE
+  project_options
+  fmt::fmt
+  CLI11::CLI11
+)
 
 ###############################################################################
 #                                 T E S T I N G                               #
