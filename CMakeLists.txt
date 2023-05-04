@@ -117,7 +117,7 @@ if(UNIX)
 
   # Note: CMAKE_CXX_STANDARD set to 20 should already take care of adding -std=c++20 or equivalent
 elseif(WIN32)
-  target_compile_options(project_options INTERFACE /utf-8)
+  target_compile_options(project_options INTERFACE /utf-8 /EHsc /MP)
 endif()
 
 #######################################################################
@@ -178,7 +178,7 @@ conan_cmake_configure(
   "fmt/9.1.0#811e918ca4b4e0b9ddd6d5a2883efa82"
   "gtest/1.11.0#8aca975046f1b60c660ee9d066764d69"
   #"cli11/2.2.0#33cd38722fa134b15ae308dfb4e6c942"
-  "cli11/2.3.2#8ccdf14fb1ad53532d498c16ae580b4b"
+  # "cli11/2.3.2#8ccdf14fb1ad53532d498c16ae580b4b"
   GENERATORS ${CONAN_GENERATOR}
 )
 
@@ -218,7 +218,7 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_BINARY_DIR}" "${PROJECT_SOURCE_DIR}/CMa
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 
 find_package(fmt REQUIRED)
-find_package(CLI11 REQUIRED)
+find_package(CLI11 CONFIG REQUIRED PATH "C:/Users/julien/Software/Others/build-CLI11/_CPack_Packages/win64/ZIP/CLI11-2.3.2-win64")
 find_package(GTest REQUIRED)
 
 ###############################################################################
@@ -261,6 +261,16 @@ add_executable(mcve
   src/Filesystem.hpp
 )
 target_link_libraries(mcve
+  PRIVATE
+  project_options
+  fmt::fmt
+  CLI11::CLI11
+)
+
+add_executable(regular_main
+  src/regular_main.cpp
+)
+target_link_libraries(regular_main
   PRIVATE
   project_options
   fmt::fmt
