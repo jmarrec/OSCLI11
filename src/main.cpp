@@ -5,6 +5,7 @@
 #include <fmt/format.h>
 #include <fmt/std.h>     // Formatting std::filesystem::path
 #include <fmt/ranges.h>  // Formatting std::vector
+#include <fmt/color.h>  // Formatting std::vector
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -13,6 +14,12 @@ int main(int argc, char* argv[]) {
   CLI::App app{"openstudio CLI"};
   app.allow_extras(true);
   app.require_subcommand(1);
+
+  fmt::print(fmt::fg(fmt::color::red),
+      "┌{0:─^{2}}┐\n"
+      "│{1: ^{2}}│\n"
+      "└{0:─^{2}}┘\n",
+      "", "The `labs` command is experimental - Do not use in production", 80);
 
   bool verbose = false;
   app.add_flag("--verbose", verbose, "Print the full log to STDOUT");

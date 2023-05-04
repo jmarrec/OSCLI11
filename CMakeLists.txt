@@ -116,6 +116,8 @@ if(UNIX)
   endif()
 
   # Note: CMAKE_CXX_STANDARD set to 20 should already take care of adding -std=c++20 or equivalent
+elseif(WIN32)
+  target_compile_options(project_options INTERFACE /utf-8)
 endif()
 
 #######################################################################
@@ -271,7 +273,7 @@ target_link_libraries(mcve
 
 # set(TEST_DIR_PATH "${PROJECT_SOURCE_DIR}/test")
 # configure_file("${TEST_DIR_PATH}/resources.hxx.in" "${PROJECT_BINARY_DIR}/src/resources.hxx")
-# 
+#
 # add_executable(tests
 #   test/BuildDirectoryInfo_GTest.cpp
 #   test/TimeUtilities_GTest.cpp
@@ -283,9 +285,9 @@ target_link_libraries(mcve
 #   build_dir_status_lib
 #   GTest::GTest
 # )
-# 
+#
 # enable_testing()
-# 
+#
 # include(GoogleTest)
 # gtest_discover_tests(tests
 #   # WORKING_DIRECTORY Testing
